@@ -11,4 +11,3 @@ for i in range(1, 21):
     for elem in risultati:
         link = elem.find('a')['href']
         file.write(link+"\n")
-
