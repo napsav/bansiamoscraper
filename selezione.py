@@ -7,6 +7,9 @@ f = open("data.txt", "r", encoding="utf-8")
 salvataggio = open("bans-audio-video.json", "w+", encoding="utf-8")
 bans = f.readlines()
 baseURL = 'https://www.bansiamo.it/'
+baseURLmp4 = "https://mp4.s3.eu-de.cloud-object-storage.appdomain.cloud/"
+baseURLwebm = "https://webm.s3.eu-de.cloud-object-storage.appdomain.cloud/"
+baseURLaudio = "https://audioban.s3.eu-de.cloud-object-storage.appdomain.cloud/"
 bans_final = []
 for i, x in enumerate(bans):
     no_vid = False
@@ -39,15 +42,15 @@ for i, x in enumerate(bans):
             x['youtube']=True
             x['video']=youtube_video
         else:
-            html5_video_audio = soup.find("video").find_all("source")
+            html5_video = soup.find("video").find_all("source")
             
-            video = baseURL + urllib.parse.quote(html5_video_audio[1].get("src"))
-            audio = baseURL + urllib.parse.quote(html5_video_audio[0].get("src"))
+            video = baseURLmp4 + urllib.parse.quote(html5_video[1].get("src"))
+            videowebm = baseURLwebm + urllib.parse.quote(html5_video[0].get("src"))
             x['youtube']=False
             x['video']=video
-            x['video-audio']=audio
+            x['video-webm']=videowebm
     if not no_aud:
-        audio = baseURL + urllib.parse.quote(soup.find("audio").find("source").get("src"))
+        audio = baseURLaudio + urllib.parse.quote(soup.find("audio").find("source").get("src"))
         x['audio']=audio
     bans_final.append(x)
 salvataggio.write(json.dumps(bans_final, indent=2))
