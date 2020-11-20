@@ -31,6 +31,7 @@ for i, x in enumerate(bans):
     testo_clean = [line.strip() for line in testo.split('\n') if line.strip() != '']
     testostr = "\n".join(testo_clean)
     x =  {
+        "id":i,
         "titolo":titolo,
         "descrizione":descrizione,
         "testo":testostr,
@@ -44,13 +45,13 @@ for i, x in enumerate(bans):
         else:
             html5_video = soup.find("video").find_all("source")
             
-            video = baseURLmp4 + urllib.parse.quote(html5_video[1].get("src"))
-            videowebm = baseURLwebm + urllib.parse.quote(html5_video[0].get("src"))
+            video = baseURLmp4 + urllib.parse.quote(html5_video[1].get("src").replace("video/", ""))
+            videowebm = baseURLwebm + urllib.parse.quote(html5_video[0].get("src").replace("video/", ""))
             x['youtube']=False
             x['video']=video
             x['video-webm']=videowebm
     if not no_aud:
-        audio = baseURLaudio + urllib.parse.quote(soup.find("audio").find("source").get("src"))
+        audio = baseURLaudio + urllib.parse.quote(soup.find("audio").find("source").get("src").replace("audio/",""))
         x['audio']=audio
     bans_final.append(x)
 salvataggio.write(json.dumps(bans_final, indent=2))
